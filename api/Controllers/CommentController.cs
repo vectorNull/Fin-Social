@@ -1,6 +1,7 @@
 using api.DTOs.Comment;
 using api.Interfaces;
 using api.Mappers;
+using api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -9,17 +10,19 @@ namespace api.Controllers
     [Route("api/v1/comment")]
     public class CommentController : ControllerBase
     {
-        private readonly ICommentRepo _repo;
+        private readonly ICommentRepo _commentRepo;
+        private readonly IStockRepo _stockRepo;
 
-        public CommentController(ICommentRepo repo)
+        public CommentController(ICommentRepo commentRepo, IStockRepo stockRepo)
         {
-            _repo = repo;
+            _commentRepo = commentRepo;
+            _stockRepo = stockRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCommentsAsync()
         {
-            var comments = await _repo.GetAllAsync();
+            var comments = await _commentRepo.GetAllAsync();
 
             if (comments is null)
             {
@@ -34,7 +37,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCommentbyId([FromRoute] int id)
         {
-            var comment = await _repo.GetByIdAsync(id);
+            var comment = await _commentRepo.GetByIdAsync(id);
 
             if (comment is null)
             {
@@ -44,12 +47,17 @@ namespace api.Controllers
             return Ok(comment.ToCommentDto());            
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateComment([FromBody] CreateCommentRequestDto commentDto)
+        [HttpPost("{stockId}")]
+        public async Task<IActionResult> CreateComment([FromRoute] int stockId, [FromBody] CreateCommentRequestDto commentDto)
         {
-            var commentModel = commentDto.FromCreatedDtoToComment();
+            if (!await _stockRepo.StockExists(stockId))
+            {
+                return BadRequest("Stock does not exist.");
+            }
+            
+            var commentModel = commentDto.FromCreatedDtoToComment(stockId);
 
-            await _repo.CreateAsync(commentModel);
+            await _commentRepo.CreateAsync(commentModel);
 
             return CreatedAtAction(nameof(GetCommentbyId), new { id = commentModel.Id }, commentModel.ToCommentDto());
         }
@@ -58,7 +66,7 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentRequestDto commentDto)
         {
-            var comment = await _repo.UpdateAsync(id, commentDto);
+            var comment = await _commentRepo.UpdateAsync(id, commentDto);
 
             if (comment is null)
             {
@@ -72,7 +80,7 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {
-            var comment = await _repo.DeleteAsync(id);
+            var comment = await _commentRepo.DeleteAsync(id);
 
             if (comment is null)
             {

@@ -10,19 +10,19 @@ namespace api.Controllers
   [ApiController]
   public class StockController : ControllerBase
   {
-    private readonly IStockRepo _repo;
+    private readonly IStockRepo _stockRepo;
     private readonly AppDbContext _context;
 
-    public StockController(AppDbContext context, IStockRepo repo)
+    public StockController(AppDbContext context, IStockRepo stockRepo)
     {
       _context = context;
-      _repo = repo;
+      _stockRepo = stockRepo;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-      var stocks = await _repo.GetAllAsync();
+      var stocks = await _stockRepo.GetAllAsync();
       var stockDTOs = stocks.Select(s => s.ToStockDto());
 
       return Ok(stockDTOs);
@@ -31,7 +31,7 @@ namespace api.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-      var stock = await _repo.GetByIdAsync(id);
+      var stock = await _stockRepo.GetByIdAsync(id);
       
       if (stock == null)
       {
@@ -45,7 +45,7 @@ namespace api.Controllers
     public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
     {
       var stockModel = stockDto.ToStockFromCreateDto();
-      await _repo.CreateAsync(stockModel);
+      await _stockRepo.CreateAsync(stockModel);
       return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
     }
 
@@ -53,7 +53,7 @@ namespace api.Controllers
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto stockDto)
     {
-      var stock = await _repo.UpdateAsync(id, stockDto);
+      var stock = await _stockRepo.UpdateAsync(id, stockDto);
 
       if (stock is null)
       {
@@ -67,7 +67,7 @@ namespace api.Controllers
     [Route("{id}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-      var stock = await _repo.DeleteAsync(id);
+      var stock = await _stockRepo.DeleteAsync(id);
 
       if (stock == null)
       {
