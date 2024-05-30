@@ -37,14 +37,14 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCommentbyId([FromRoute] int id)
         {
-            var comment = await _commentRepo.GetByIdAsync(id);
+            var commentModel = await _commentRepo.GetByIdAsync(id);
 
-            if (comment is null)
+            if (commentModel is null)
             {
                 return NotFound();
             }
-
-            return Ok(comment.ToCommentDto());            
+            
+            return Ok(commentModel.ToCommentDto());            
         }
 
         [HttpPost("{stockId}")]
@@ -66,14 +66,14 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentRequestDto commentDto)
         {
-            var comment = await _commentRepo.UpdateAsync(id, commentDto);
+            var commentModel = await _commentRepo.UpdateAsync(id, commentDto);
 
-            if (comment is null)
+            if (commentModel is null)
             {
                 return NotFound();
             }
 
-            return Ok(comment.ToCommentDto());
+            return Ok(commentModel.ToCommentDto());
         }
 
         [HttpDelete]

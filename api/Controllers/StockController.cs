@@ -31,14 +31,14 @@ namespace api.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-      var stock = await _stockRepo.GetByIdAsync(id);
+      var stockModel = await _stockRepo.GetByIdAsync(id);
       
-      if (stock == null)
+      if (stockModel == null)
       {
         return NotFound();
       }
 
-      return Ok(stock.ToStockDto());
+      return Ok(stockModel.ToStockDto());
     }
 
     [HttpPost]
@@ -53,23 +53,23 @@ namespace api.Controllers
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto stockDto)
     {
-      var stock = await _stockRepo.UpdateAsync(id, stockDto);
+      var stockModel = await _stockRepo.UpdateAsync(id, stockDto);
 
-      if (stock is null)
+      if (stockModel is null)
       {
         return NotFound();
       }
 
-      return Ok(stock.ToStockDto());
+      return Ok(stockModel.ToStockDto());
     }
 
     [HttpDelete]
     [Route("{id}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-      var stock = await _stockRepo.DeleteAsync(id);
+      var stockModel = await _stockRepo.DeleteAsync(id);
 
-      if (stock == null)
+      if (stockModel == null)
       {
         return NotFound();
       }
