@@ -1,6 +1,5 @@
 using api.DTOs.Comment;
 using api.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace api.Interfaces
 {

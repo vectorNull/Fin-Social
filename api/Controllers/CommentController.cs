@@ -87,14 +87,14 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var commentModel = await _commentRepo.UpdateAsync(id, commentDto);
+            var comment = await _commentRepo.UpdateAsync(id, commentDto);
 
-            if (commentModel is null)
+            if (comment == null)
             {
-                return NotFound();
+                return NotFound("Comment not found");
             }
 
-            return Ok(commentModel.ToCommentDto());
+            return Ok(comment.ToCommentDto());
         }
 
         [HttpDelete]

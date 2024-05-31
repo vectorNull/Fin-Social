@@ -1,7 +1,9 @@
 using api.Data;
 using api.DTOs.Comment;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories
@@ -40,19 +42,20 @@ namespace api.Repositories
 
         public async Task<Comment?> UpdateAsync(int id, UpdateCommentRequestDto commentDto)
         {
-            var commentModel = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+            var existingComment = await _context.Comments.FindAsync(id);
+            var newComment = commentDto.FromUpdateDtoToComment(id);
 
-            if (commentModel is null)
+            if (existingComment == null)
             {
                 return null;
             }
 
-            commentModel.Title = commentDto.Title;
-            commentModel.Content = commentDto.Content;
+            existingComment.Title = newComment.Title;
+            existingComment.Content = newComment.Content;
 
             await _context.SaveChangesAsync();
 
-            return commentModel;
+            return existingComment;
         }
         
         public async Task<Comment?> DeleteAsync(int id)
