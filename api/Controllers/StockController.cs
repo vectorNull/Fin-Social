@@ -1,5 +1,6 @@
 using api.Data;
 using api.DTOs.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using MethodTimer;
@@ -22,8 +23,7 @@ namespace api.Controllers
 
     [Time]
     [HttpGet]
-    [ResponseCache(Duration = 10, Location = ResponseCacheLocation.Any, NoStore = false)]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
     {
 
       //! Uncomment if ever passing dto to method. Validation performed in class.
@@ -32,7 +32,7 @@ namespace api.Controllers
       //     return BadRequest(ModelState);
       // }
       
-      var stocks = await _stockRepo.GetAllAsync();
+      var stocks = await _stockRepo.GetAllAsync(query);
       var stockDTOs = stocks.Select(s => s.ToStockDto());
 
       return Ok(stockDTOs);
