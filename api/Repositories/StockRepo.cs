@@ -44,28 +44,27 @@ namespace api.Repositories
             var stocks = _context.Stocks
                 .Include(c => c.Comments)
                 .AsQueryable();
-            
-            if (!string.IsNullOrWhiteSpace(query.CompanyName))
-            {
-                stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
-            }
 
-            if (!string.IsNullOrWhiteSpace(query.Symbol))
-            {
-                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.SortBy))
-            {
-                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
-                {
-                    stocks = query.IsDescending 
-                        ? stocks.OrderByDescending(s => s.Symbol) 
-                        : stocks.OrderBy(s => s.Symbol);
-                }
-            }
+            stocks = FilterStocks(stocks, query);
+            stocks = SortStocks(stocks, query);
 
             return await stocks.ToListAsync();
+        }
+
+        private IQueryable<Stock> SortStocks(IQueryable<Stock> stocks, QueryObject query)
+        {
+            if (string.IsNullOrWhiteSpace(query.SortBy)) return stocks;
+
+            return query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase)
+                ? (query.IsDescending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol))
+                : stocks;
+        }
+
+        private IQueryable<Stock> FilterStocks(IQueryable<Stock> stocks, QueryObject query)
+        {
+            return stocks
+                .Where(s => string.IsNullOrWhiteSpace(query.CompanyName) || s.CompanyName.Contains(query.CompanyName))
+                .Where(s => string.IsNullOrWhiteSpace(query.Symbol) || s.Symbol.Contains(query.Symbol));
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
