@@ -47,6 +47,7 @@ namespace api.Repositories
 
             stocks = FilterStocks(stocks, query);
             stocks = SortStocks(stocks, query);
+            stocks = PaginateStocks(stocks, query);
 
             return await stocks.ToListAsync();
         }
@@ -65,6 +66,13 @@ namespace api.Repositories
             return stocks
                 .Where(s => string.IsNullOrWhiteSpace(query.CompanyName) || s.CompanyName.Contains(query.CompanyName))
                 .Where(s => string.IsNullOrWhiteSpace(query.Symbol) || s.Symbol.Contains(query.Symbol));
+        }
+
+        private IQueryable<Stock> PaginateStocks(IQueryable<Stock> stocks, QueryObject query)
+        {
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return stocks.Skip(skipNumber).Take(query.PageSize);
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
