@@ -54,13 +54,13 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            
-            return Ok(commentModel.ToCommentDto());            
+
+            return Ok(commentModel.ToCommentDto());
         }
 
         [HttpPost("{stockId:int}")]
         public async Task<IActionResult> CreateComment([FromRoute] int stockId, [FromBody] CreateCommentRequestDto commentDto)
-        {   
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -70,7 +70,7 @@ namespace api.Controllers
             {
                 return BadRequest("Stock does not exist.");
             }
-            
+
             var commentModel = commentDto.FromCreatedDtoToComment(stockId);
 
             await _commentRepo.CreateAsync(commentModel);
@@ -106,7 +106,7 @@ namespace api.Controllers
             // {
             //     return BadRequest(ModelState);
             // }
-            
+
             var comment = await _commentRepo.DeleteAsync(id);
 
             if (comment is null)
@@ -116,6 +116,6 @@ namespace api.Controllers
 
             return NoContent();
         }
-        
+
     }
 }

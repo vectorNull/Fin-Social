@@ -78,12 +78,12 @@ namespace api.Repositories
         public async Task<Stock?> GetByIdAsync(int id)
         {
             var stockModel = await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(s => s.Id == id);
-            
+
             if (stockModel is null)
             {
                 return null;
             }
-            
+
             return stockModel;
         }
 
