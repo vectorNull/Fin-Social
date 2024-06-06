@@ -60,7 +60,7 @@ public class StockControllerTests
         };
 
         _mockStockRepo.Setup(repo => repo.GetAllAsync(query)).ReturnsAsync(stockList);
-        
+
         //* Act
         var result = await _controller.GetAll(query);
 
@@ -76,22 +76,22 @@ public class StockControllerTests
     public async void GetById_ReturnsOKResult_With_StockDto()
     {
         //* Arrange
-        
+
         var stockId = 1;
         var stock = new Stock
         {
-             Id = stockId,
-                Symbol = "AAPL",
-                CompanyName = "Apple Inc.",
-                Purchase = 150.00m,
-                LastDiv = 0.82m,
-                Industry = "Technology",
-                MarketCap = 2500000000,
-                Comments = new List<Comment>()
+            Id = stockId,
+            Symbol = "AAPL",
+            CompanyName = "Apple Inc.",
+            Purchase = 150.00m,
+            LastDiv = 0.82m,
+            Industry = "Technology",
+            MarketCap = 2500000000,
+            Comments = new List<Comment>()
         };
 
         _mockStockRepo.Setup(repo => repo.GetByIdAsync(stockId)).ReturnsAsync(stock);
-        
+
         //* Act
         var result = await _controller.GetById(stockId);
 
