@@ -1,3 +1,4 @@
+using System.Reflection;
 using api.Data;
 using api.Interfaces;
 using api.Models;
@@ -59,6 +60,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IStockRepo, StockRepo>();
 builder.Services.AddScoped<ICommentRepo, CommentRepo>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
 
