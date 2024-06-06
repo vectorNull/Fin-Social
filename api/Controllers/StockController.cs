@@ -13,11 +13,10 @@ namespace api.Controllers
     public class StockController : ControllerBase
     {
         private readonly IStockRepo _stockRepo;
-        private readonly AppDbContext _context;
 
-        public StockController(AppDbContext context, IStockRepo stockRepo)
+        //* Used for unit testing
+        public StockController(IStockRepo stockRepo)
         {
-            _context = context;
             _stockRepo = stockRepo;
         }
 
