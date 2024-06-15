@@ -11,7 +11,7 @@ namespace api.Queries
 
         public GetAllStocksQuery(QueryObject queryObject)
         {
-            QueryObject = queryObject; 
+            QueryObject = queryObject;
         }
     }
 }
