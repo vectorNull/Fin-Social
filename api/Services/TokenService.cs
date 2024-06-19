@@ -11,7 +11,6 @@ namespace api.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration _configuration;
         private readonly JwtSettings _jwtSettings;
         private readonly SymmetricSecurityKey _key;
 
@@ -25,8 +24,8 @@ namespace api.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName!)
             };
 
             var signingCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
