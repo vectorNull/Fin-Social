@@ -1,6 +1,6 @@
 using api.Extensions;
+using api.Interfaces;
 using api.Models;
-using api.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +11,10 @@ namespace api.Controllers
     public class PortfolioController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly StockRepo _stockRepo;
+        private readonly IStockRepo _stockRepo;
 
-        private readonly PortfolioRepo _portfolioRepo;
-        public PortfolioController(UserManager<AppUser> userManager, StockRepo stockRepo, PortfolioRepo portfolioRepo)
+        private readonly IPortfolioRepo _portfolioRepo;
+        public PortfolioController(UserManager<AppUser> userManager, IStockRepo stockRepo, IPortfolioRepo portfolioRepo)
         {
             _userManager = userManager;
             _stockRepo = stockRepo;

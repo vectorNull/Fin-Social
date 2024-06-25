@@ -26,7 +26,6 @@ namespace api.Repositories
                     Industry = stock.Stock.Industry,
                     MarketCap = stock.Stock.MarketCap,
                     Comments = stock.Stock.Comments,
-                    Portfolios = stock.Stock.Portfolios
                 }).ToListAsync();
         }
     }
