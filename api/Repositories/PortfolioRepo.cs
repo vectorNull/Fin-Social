@@ -1,5 +1,7 @@
 using api.Data;
+using api.DTOs.Stock;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,20 +15,11 @@ namespace api.Repositories
         {
             _context = context;
         }
-        public async Task<List<Stock>> GetUserPortfolioAsync(AppUser user)
+        public async Task<List<StockDto>> GetUserPortfolioAsync(AppUser user)
         {
-            return await _context.Portfolios.Where(x => x.AppUser.Id == user.Id)
-                .Select(stock => new Stock
-                {
-                    Id = stock.StockId,
-                    Symbol = stock.Stock.Symbol,
-                    CompanyName = stock.Stock.CompanyName,
-                    Purchase = stock.Stock.Purchase,
-                    LastDiv = stock.Stock.LastDiv,
-                    Industry = stock.Stock.Industry,
-                    MarketCap = stock.Stock.MarketCap,
-                    Comments = stock.Stock.Comments,
-                }).ToListAsync();
+            return await _context.Portfolios.Where(x => x.AppUserId == user.Id)
+                .Select(stock => stock.Stock.ToStockDto())
+                .ToListAsync();
         }
     }
 }

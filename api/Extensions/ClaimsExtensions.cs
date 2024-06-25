@@ -12,12 +12,8 @@ namespace api.Extensions
 
             var usernameClaimTypes = new[]
             {
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
                 ClaimTypes.Name,
                 ClaimTypes.GivenName,
-                "name",
-                "given_name"
             };
 
             foreach (var claimType in usernameClaimTypes)
