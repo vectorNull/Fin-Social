@@ -43,6 +43,7 @@ namespace api.Repositories
         {
             var stocks = _context.Stocks
                 .Include(c => c.Comments)
+                .ThenInclude(a => a.AppUser)
                 .AsQueryable();
 
             stocks = FilterStocks(stocks, query);
