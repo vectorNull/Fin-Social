@@ -10,16 +10,40 @@ namespace api.Repositories
     public class PortfolioRepo : IPortfolioRepo
     {
         private readonly AppDbContext _context;
+        private readonly IStockRepo _stockRepo;
 
-        public PortfolioRepo(AppDbContext context)
+        public PortfolioRepo(AppDbContext context, IStockRepo stockRepo)
         {
             _context = context;
+            _stockRepo = stockRepo;
         }
+
         public async Task<List<StockDto>> GetUserPortfolioAsync(AppUser user)
         {
             return await _context.Portfolios.Where(x => x.AppUserId == user.Id)
                 .Select(stock => stock.Stock.ToStockDto())
                 .ToListAsync();
+        }
+
+        public async Task<StockDto?> AddStockToPortfolioAsync(AppUser user, string symbol)
+        {
+            var stock = await _stockRepo.GetBySymbolAsync(symbol);
+
+            if (stock == null)
+            {
+                return null;
+            }
+
+            var portfolio = new Portfolio
+            {
+                AppUserId = user.Id,
+                StockId = stock.Id
+            };
+
+            await _context.Portfolios.AddAsync(portfolio);
+            await _context.SaveChangesAsync();
+
+            return stock.ToStockDto();
         }
     }
 }

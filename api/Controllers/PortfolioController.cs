@@ -43,5 +43,33 @@ namespace api.Controllers
 
             return Ok(userPortfolio);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddStockToPortfolio(string symbol)
+        {
+            var username = User.GetUsername();
+
+            if (username == null)
+            {
+                return Unauthorized();
+            }
+
+            var appUser = await _userManager.FindByNameAsync(username);
+
+            if (appUser == null)
+            {
+                return Unauthorized();
+            }
+
+            var stockDto = await _portfolioRepo.AddStockToPortfolioAsync(appUser, symbol);
+
+            if (stockDto == null)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(nameof(GetUserPortfolio), new { id = stockDto.Id }, stockDto);
+        }
     }
 }

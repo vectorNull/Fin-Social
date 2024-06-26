@@ -24,11 +24,11 @@ namespace api.Mappers
         {
             return new Stock
             {
-                Symbol = stockDto.Symbol,
-                CompanyName = stockDto.CompanyName,
+                Symbol = stockDto.Symbol.ToLower(),
+                CompanyName = stockDto.CompanyName.ToLower(),
                 Purchase = stockDto.Purchase,
                 LastDiv = stockDto.LastDiv,
-                Industry = stockDto.Industry,
+                Industry = stockDto.Industry.ToLower(),
                 MarketCap = stockDto.MarketCap
             };
         }
