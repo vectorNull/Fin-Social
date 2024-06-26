@@ -7,5 +7,6 @@ namespace api.Interfaces
     {
         Task<List<StockDto>> GetUserPortfolioAsync(AppUser user);
         Task<StockDto?> AddStockToPortfolioAsync(AppUser user, string symbol);
+        Task<Boolean> RemoveStockFromPortfolioAsync(AppUser user, string symbol);
     }
 }

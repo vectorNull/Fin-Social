@@ -71,5 +71,33 @@ namespace api.Controllers
 
             return CreatedAtAction(nameof(GetUserPortfolio), new { id = stockDto.Id }, stockDto);
         }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> RemoveStockFromPortfolio(string symbol)
+        {
+            var username = User.GetUsername();
+
+            if (username == null)
+            {
+                return Unauthorized();
+            }
+
+            var appUser = await _userManager.FindByNameAsync(username);
+
+            if (appUser == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _portfolioRepo.RemoveStockFromPortfolioAsync(appUser, symbol);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }

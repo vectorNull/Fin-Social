@@ -45,5 +45,28 @@ namespace api.Repositories
 
             return stock.ToStockDto();
         }
+
+        public async Task<bool> RemoveStockFromPortfolioAsync(AppUser user, string symbol)
+        {
+            var stock = await _stockRepo.GetBySymbolAsync(symbol);
+
+            if (stock == null)
+            {
+                return false;
+            }
+
+            var portfolio = await _context.Portfolios.FirstOrDefaultAsync(x => 
+                x.AppUserId == user.Id && x.StockId == stock.Id);
+
+            if (portfolio == null)
+            {
+                return false;
+            }
+
+            _context.Portfolios.Remove(portfolio);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
