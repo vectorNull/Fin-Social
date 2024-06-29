@@ -32,5 +32,20 @@ namespace api.Mappers
                 MarketCap = stockDto.MarketCap
             };
         }
+
+        public static Stock ToStockFromFMPStockDto(this FMPStock fmpStock)
+        {
+            return new Stock
+            {
+                Symbol = fmpStock.symbol!.ToLower(),
+                CompanyName = fmpStock.companyName!.ToLower(),
+                Purchase = (decimal)fmpStock.price,
+                LastDiv = (decimal)fmpStock.lastDiv,
+                Industry = fmpStock.industry!.ToLower(),
+                MarketCap = fmpStock.mktCap
+            };
+        }
+
+
     }
 }

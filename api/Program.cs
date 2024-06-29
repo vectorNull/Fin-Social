@@ -109,6 +109,8 @@ builder.Services.AddScoped<IPortfolioRepo, PortfolioRepo>();
 builder.Services.AddScoped<IStockRepo, StockRepo>();
 builder.Services.AddScoped<ICommentRepo, CommentRepo>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IFinancialModelingPrepService, FinancialModelingPrepService>();
+builder.Services.AddHttpClient<IFinancialModelingPrepService, FinancialModelingPrepService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();

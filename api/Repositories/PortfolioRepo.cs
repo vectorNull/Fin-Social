@@ -3,6 +3,7 @@ using api.DTOs.Stock;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories
@@ -11,11 +12,13 @@ namespace api.Repositories
     {
         private readonly AppDbContext _context;
         private readonly IStockRepo _stockRepo;
+        private readonly IFinancialModelingPrepService _financialModelingPrepService;
 
-        public PortfolioRepo(AppDbContext context, IStockRepo stockRepo)
+        public PortfolioRepo(AppDbContext context, IStockRepo stockRepo, IFinancialModelingPrepService financialModelingPrepService)
         {
             _context = context;
             _stockRepo = stockRepo;
+            _financialModelingPrepService = financialModelingPrepService;
         }
 
         public async Task<List<StockDto>> GetUserPortfolioAsync(AppUser user)
@@ -29,9 +32,18 @@ namespace api.Repositories
         {
             var stock = await _stockRepo.GetBySymbolAsync(symbol);
 
-            if (stock == null)
+             if (stock is null)
             {
-                return null;
+                stock = await _financialModelingPrepService.FindStockBySymbolAsync(symbol);
+                
+                if (stock is null)
+                {
+                    return null;
+                }
+                else
+                {
+                    await _stockRepo.CreateAsync(stock);
+                }
             }
 
             var portfolio = new Portfolio

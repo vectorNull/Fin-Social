@@ -80,24 +80,14 @@ namespace api.Repositories
         {
             var stockModel = await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(s => s.Id == id);
 
-            if (stockModel is null)
-            {
-                return null;
-            }
-
-            return stockModel;
+            return stockModel is null ? null : stockModel;
         }
 
         public async Task<Stock?> GetBySymbolAsync(string symbol)
         {
             var stockModel = await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(s => s.Symbol == symbol);
 
-            if (stockModel is null)
-            {
-                return null;
-            }
-
-            return stockModel;
+            return stockModel is null ? null : stockModel;
         }
 
         public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stockDto)
@@ -121,9 +111,9 @@ namespace api.Repositories
             return stock;
         }
 
-        public async Task<bool> StockExists(int stockId)
+        public async Task<bool> StockExists(string symbol)
         {
-            return await _context.Stocks.AnyAsync(s => s.Id == stockId);
+            return await _context.Stocks.AnyAsync(s => s.Symbol == symbol);
         }
     }
 }
