@@ -1,5 +1,6 @@
 using api.DTOs.Comment;
 using api.Extensions;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -27,9 +28,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCommentsAsync()
+        public async Task<IActionResult> GetAllCommentsAsync(CommentQueryObject queryObject)
         {
-            var comments = await _commentRepo.GetAllAsync();
+            var comments = await _commentRepo.GetAllAsync(queryObject);
 
             if (comments is null)
             {
